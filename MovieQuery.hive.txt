@@ -52,7 +52,7 @@ LIMIT 1;
 SELECT movie_title 
 FROM udata 
 LEFT OUTER JOIN u.item ON (udata.movieid=uitem.movieid) 
-WHERE uitem.movieid IS NULL.
+WHERE uitem.movieid IS NULL;
 
 
 
