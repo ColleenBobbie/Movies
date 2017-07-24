@@ -1,0 +1,104 @@
+#Hadoop
+  # Upload data into HDFS
+    
+    hadoop fs -mkdir /user/movies
+    hadoop fs -put movies/u.data /user/movies
+    hadoop fs -put movies/u.item /user/movies
+    
+#Hive
+  # Load Hive
+    
+      hive
+      
+  # Create and load database
+    
+      create database movies;
+      use movies;
+      
+  # Create Tables
+      
+      create table movies.udata(
+      user_id int, movie_id int, rating int, timestamp bigint)
+      row format delimited fields terminated by '|';
+      
+      create table movies.uitem(
+      movie_id int, movie_title string, release_date string, video_release_date string, imbd_url string, unknown string, action int, adventure int, animation int, childrens int, comedy int, crime int, documentary int, drama int, fil_noir int, horror int, muscial int, mystery int, romance int, sci_fi int, thriller int, war int, western int)
+      row format delimited
+      fields terminated by '|';
+      
+   # Load data
+   
+      load data inpath '/user/movies/u.data'
+      overwrite into table movies.udata;
+      
+      load data inpath '/user/movies/u.item'
+      overwrite into table movies.uitem;
+ 
+    # Display first few lines to ensure data were loaded correctly
+    
+      select * from movies.udata
+      limit 5;
+      
+      select * from movies.item
+      limit 5;
+      
+#HiveQL
+
+  # How many records are in the u.data and u.item tables? 
+
+    SELECT COUNT(*) 
+    FROM udata;
+    SELECT COUNT(*) 
+    FROM uitem;
+
+  # Find the names of all movies released in 1990
+
+    SELECT movie_title 
+    FROM udata 
+    WHERE release_date LIKE '%1990';
+
+  #alternatively:
+    CREATE TABLE uitemdate AS 
+    SELECT movieid, movie_title, substr(relase_date, 8, 4) 
+    FROM uitem;
+    SELECT movie_title 
+    FROM uitemdate 
+    WHERE year = 1990;
+
+  # List the movieid of the 10 films that recieved the most ratings.
+
+    CREATE TABLE moviecnt AS
+    SELECT movieid, COUNT(*) AS cnt 
+    FROM udata 
+    GROUP BY movieid 
+    ORDER BY cnt DESC 
+    LIMIT 10;
+
+  #List the titles of the movies with the 10 most ratings.
+
+    SELECT a.movieid, a.cnt, b.movie_title
+    FROM moviecnt AS a
+    JOIN uitem AS b
+    ON a.movieid=b.movieid
+    ORDER BY a.cnt DESC;
+
+  #Find the highest average rated sci_fi movie.
+
+    SELECT AVG(a.rating) as rating, b.movie_title
+    FROM udata AS a
+    JOIN uitem AS b
+    ON a.movieid=b.movieid 
+    WHERE b.sci_fi=1
+    GROUP BY movie_title
+    ORDER BY rating DESC
+    LIMIT 1;
+
+  #Are there any movies with no ratings?
+
+    SELECT movie_title 
+    FROM udata 
+    LEFT OUTER JOIN u.item ON (udata.movieid=uitem.movieid) 
+    WHERE uitem.movieid IS NULL;
+
+
+
