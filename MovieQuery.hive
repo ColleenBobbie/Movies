@@ -1,3 +1,4 @@
+```
 #Hadoop
   # Upload data into HDFS
     
@@ -99,6 +100,6 @@
     FROM udata 
     LEFT OUTER JOIN u.item ON (udata.movieid=uitem.movieid) 
     WHERE uitem.movieid IS NULL;
-
+```
 
 
