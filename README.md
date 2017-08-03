@@ -25,7 +25,7 @@ This analysis relies on HiveQL statements and includes SELECT, WHERE, GROUP BY, 
 Queries on this dataset include:
  * How many records are in each table?
  * What are the names of the movies released in 1990?
- * What are the movie id's of the 10 filmes that recieved the most ratings?
+ * What are the movie id's for the 10 films that recieved the most ratings?
  * What are the titles of the movies with the 10 most ratings?
  * What is the highest average rated sci-fi movie?
  * Are there any movies with no ratings?
